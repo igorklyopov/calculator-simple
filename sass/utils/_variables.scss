@@ -1,0 +1,26 @@
+:root {
+  //colors
+  // --primary-text-color: #707070;
+  // --secondary-text-color: #2e266f;
+  // --basic-light-text-color: #ffffff;
+  // --primary-accent-color: #35cd8c;
+  // --secondary-accent-color: #fe043c;
+  // --basic-dark-text-color: #000000;
+  // --primary-bg-color: #fff5ec;
+  // --secondary-bg-color: #ffedde;
+  // --basic-light-bg-color: #ffffff;
+  // --bg-gradient-pattern-color: #e5e5e5;
+  // --bg-overlay-color: rgba(53, 205, 140, 0.7);
+  //typography
+  // --regular-font-weight: 400;
+  // --medium-font-weight: 500;
+  --bold-font-weight: 700;
+  --primary-font-size:24px;
+  //animation
+  --basic-transform-animation: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+//breakpoints for adaptability
+$phone: 320px;
+$tablet: 768px;
+$desktop: 1920px;
