@@ -14,41 +14,167 @@
     <main>
       <section class="calculator">
         <div class="container">
-          
-          <form>
+          <span class="extra_input_field" id="extra_input_field"></span>
+          <form id="calculator_form">
             <label class="input_wrap">
-              <input type="text" class="input_field"/>
+              <input type="text" 
+               autocomplete="off" class="input_field" id="input_field" />
             </label>
 
             <ul class="numbers">
-              <li class="item""><input type="button" value="1" class="button" /></li>
-              <li class="item""><input type="button" value="2" class="button" /></li>
-              <li class="item""><input type="button" value="3" class="button" /></li>
-              <li class="item""><input type="button" value="4" class="button" /></li>
-              <li class="item""><input type="button" value="5" class="button" /></li>
-              <li class="item""><input type="button" value="6" class="button" /></li>
-              <li class="item""><input type="button" value="7" class="button" /></li>
-              <li class="item""><input type="button" value="8" class="button" /></li>
-              <li class="item""><input type="button" value="9" class="button" /></li>
+              <li class="item">
+                <input
+                  type="button"
+                  value="1"
+                  class="button"
+                  data-type="number"
+                />
+              </li>
+              <li class="item">
+                <input
+                  type="button"
+                  value="2"
+                  class="button"
+                  data-type="number"
+                />
+              </li>
+              <li class="item">
+                <input
+                  type="button"
+                  value="3"
+                  class="button"
+                  data-type="number"
+                />
+              </li>
+              <li class="item">
+                <input
+                  type="button"
+                  value="4"
+                  class="button"
+                  data-type="number"
+                />
+              </li>
+              <li class="item">
+                <input
+                  type="button"
+                  value="5"
+                  class="button"
+                  data-type="number"
+                />
+              </li>
+              <li class="item">
+                <input
+                  type="button"
+                  value="6"
+                  class="button"
+                  data-type="number"
+                />
+              </li>
+              <li class="item">
+                <input
+                  type="button"
+                  value="7"
+                  class="button"
+                  data-type="number"
+                />
+              </li>
+              <li class="item">
+                <input
+                  type="button"
+                  value="8"
+                  class="button"
+                  data-type="number"
+                />
+              </li>
+              <li class="item">
+                <input
+                  type="button"
+                  value="9"
+                  class="button"
+                  data-type="number"
+                />
+              </li>
             </ul>
             <ul class="utils">
-              <li class="item"><input type="button" value="," class="button" /></li>
-              <li class="item"><input type="button" value="+/-" class="button" /></li>
-              <li class="item"><input type="button" value="c" class="button" /></li>
+              <li class="item">
+                <input
+                  type="button"
+                  value=","
+                  class="button"
+                  data-type="util"
+                />
+              </li>
+              <li class="item">
+                <input
+                  type="button"
+                  value="+/-"
+                  class="button"
+                  data-type="util"
+                />
+              </li>
+              <li class="item">
+                <input
+                  type="button"
+                  value="del"
+                  class="button"
+                  data-type="util"
+                />
+              </li>
             </ul>
             <ul class="operators">
-              <li class="item"><input type="button" value="+" class="button" /></li>
-              <li class="item"><input type="button" value="-" class="button" /></li>
-              <li class="item"><input type="button" value="*" class="button" /></li>
-              <li class="item"><input type="button" value="/" class="button" /></li>
-              <li class="item"><input type="button" value="%" class="button" /></li>
+              <li class="item">
+                <input
+                  type="button"
+                  value="+"
+                  class="button"
+                  data-type="operator"
+                />
+              </li>
+              <li class="item">
+                <input
+                  type="button"
+                  value="-"
+                  class="button"
+                  data-type="operator"
+                />
+              </li>
+              <li class="item">
+                <input
+                  type="button"
+                  value="*"
+                  class="button"
+                  data-type="operator"
+                />
+              </li>
+              <li class="item">
+                <input
+                  type="button"
+                  value="/"
+                  class="button"
+                  data-type="operator"
+                />
+              </li>
+              <li class="item">
+                <input
+                  type="button"
+                  value="%"
+                  class="button"
+                  data-type="operator"
+                />
+              </li>
             </ul>
-            <ul class="menegement">
-              <li class="menegement_item"><button type="reset" class="button">del</button></li>
-              <li class="menegement_item"><button type="submit" class="button">=</button></li>
+            <ul class="management">
+              <li class="menegement_item">
+                <button type="reset" class="button" data-type="reset">
+                  clear
+                </button>
+              </li>
+              <li class="menegement_item">
+                <button type="submit" class="button" data-type="submit">
+                  =
+                </button>
+              </li>
             </ul>
-            
-            
           </form>
           <div class=""></div>
         </div>

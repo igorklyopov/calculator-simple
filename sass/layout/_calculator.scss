@@ -1,9 +1,27 @@
 .calculator {
   outline: 2px solid rgb(247, 13, 196);
 
-  padding: 30px 10px;
+  
+
+  // width: 100%;
+  // height: 100%;
+
+  padding: 20px 10px;
 
   background-color: aquamarine;
+}
+
+.extra_input_field {
+  display: block;
+
+  width: 100%;
+  height: 10px;
+
+  padding: 0 5px;
+  margin-bottom: 10px;
+
+  font-size: 14px;
+  font-weight: var(--bold-font-weight);
 }
 
 .input_wrap {
@@ -14,9 +32,13 @@
   margin-bottom: 10px;
 }
 
-.input_field{
+.input_field {
   width: 100%;
   min-height: 50px;
+
+  padding: 0 5px;
+
+  text-align: right;
 }
 
 .numbers,
@@ -25,19 +47,24 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   // grid-auto-rows: minmax(auto);
+  // grid-template-rows:repeat(1,1fr);
   justify-items: center;
   gap: 5px;
 
   margin-bottom: 10px;
 }
 
-.item{
-  display: block;
+.management {
+  margin-bottom: 0;
+}
+
+.item {
+  // display: block;
   width: 100%;
 }
 
-.menegement_item{
-  &:not(:last-child){
+.menegement_item {
+  &:not(:last-child) {
     margin-bottom: 10px;
   }
 }
