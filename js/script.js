@@ -86,12 +86,16 @@ function onKeydown(e) {
   if (e.key === '=') {
     onCalculateBtnClick(e);
   }
+
+  if (e.key === ' ') {
+    e.preventDefault();
+  }
 }
 
 function onCalculateBtnClick(e) {
   e.preventDefault();
 
-  const inputFieldIsEmpty = refs.inputField.value.trim() === '';
+  const inputFieldIsEmpty = refs.inputField.value === '';
 
   if (inputFieldIsEmpty || IS_CALCULATED) return;
   showResult();
