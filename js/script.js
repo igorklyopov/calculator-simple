@@ -21,18 +21,22 @@ function onButtonsClick(e) {
     return;
   }
 
-  const inputFieldIsEmpty = refs.inputField.value.trim() === '';
-
   switch (e.target.dataset.type) {
     case 'number':
-      input(e);
+      if (IS_CALCULATED) {
+        clearInputField();
+        clearInputFieldExtra();
+        IS_CALCULATED = false;
+      }
+      input(e.target.value);
       break;
 
     case 'util':
       break;
 
     case 'operator':
-      input(e);
+      IS_CALCULATED = false;
+      input(e.target.value);
       break;
 
     case 'reset':
@@ -40,24 +44,15 @@ function onButtonsClick(e) {
       break;
 
     case 'submit':
-      e.preventDefault();
-      if (inputFieldIsEmpty || IS_CALCULATED) return;
-      showResult();
-      IS_CALCULATED = true;
+      onCalculateBtnClick(e);
       break;
 
     default:
       break;
   }
 
-  function input(e) {
-    if (IS_CALCULATED) {
-      clearInputField();
-      clearInputFieldExtra();
-      IS_CALCULATED = false;
-    }
-
-    refs.inputField.value += e.target.value;
+  function input(value) {
+    refs.inputField.value += value;
   }
 }
 
@@ -87,6 +82,20 @@ function onKeydown(e) {
   if (isOperatorKey) {
     IS_CALCULATED = false;
   }
+
+  if (e.key === '=') {
+    onCalculateBtnClick(e);
+  }
+}
+
+function onCalculateBtnClick(e) {
+  e.preventDefault();
+
+  const inputFieldIsEmpty = refs.inputField.value.trim() === '';
+
+  if (inputFieldIsEmpty || IS_CALCULATED) return;
+  showResult();
+  IS_CALCULATED = true;
 }
 
 function calculate(str) {
