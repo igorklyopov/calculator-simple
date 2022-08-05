@@ -10,6 +10,7 @@ const refs = {
 
 refs.calculatorForm.addEventListener('click', onButtonsClick);
 refs.calculatorForm.addEventListener('keydown', onKeydown);
+refs.calculatorForm.addEventListener('input', onInputChange);
 
 let IS_CALCULATED = false;
 
@@ -70,8 +71,8 @@ function clearInputFieldExtra() {
 }
 
 function onKeydown(e) {
-  const isNumberKey = /[0-9]/.test(e.key);
-  const isOperatorKey = /[+,\-,*,/]/.test(e.key);
+  const isNumberKey = checkSymbolType(e.key) === 'number';
+  const isOperatorKey = checkSymbolType(e.key) === 'operator';
 
   if (IS_CALCULATED && isNumberKey) {
     clearInputField();
@@ -81,6 +82,63 @@ function onKeydown(e) {
 
   if (isOperatorKey) {
     IS_CALCULATED = false;
+
+    const inputValue = refs.inputField.value;
+    const lastSymbol = inputValue[inputValue.length - 1];
+    const prevSymbol = inputValue[inputValue.length - 2];
+
+    const prevSymbolType = checkSymbolType(prevSymbol);
+    const lastSymbolType = checkSymbolType(lastSymbol);
+
+    // --- for correct operators input --->
+    // если пусто - вводить только "-"
+    if (e.key !== '-' && inputValue === '') {
+      e.preventDefault();
+      return;
+    }
+    //если введён только "-" - при нажатии на "+" очищать инпут
+    if (e.key === '+' && inputValue === '-') {
+      e.preventDefault();
+      clearInputField();
+      return;
+    }
+    //если введён только один оператор и больше ничего - не вводить др. операторы
+    if (inputValue.length === 1 && lastSymbolType === 'operator') {
+      e.preventDefault();
+      return;
+    }
+    // после оператора "+" можно ввести только "-"
+    if (e.key !== '-' && lastSymbol === '+') {
+      e.preventDefault();
+      return;
+    }
+
+    if (e.key === '-' && lastSymbol === '-' && prevSymbolType !== 'operator') {
+      refs.inputField.value = inputValue.slice(0, inputValue.length - 1) + '+';
+    }
+
+    if (e.key === '+' && lastSymbol === '-') {
+      refs.inputField.value = inputValue.slice(0, inputValue.length - 1) + '+';
+    }
+
+    if (e.key === '+' && lastSymbol === '-' && prevSymbolType === 'number') {
+      refs.inputField.value = inputValue.slice(0, inputValue.length - 1);
+    }
+
+    if (e.key === '+' && lastSymbol === '-' && prevSymbol === '+') {
+      e.preventDefault();
+      refs.inputField.value = inputValue.slice(0, inputValue.length - 1);
+    }
+    //не вводить больше 2-х операторов подряд
+    if (prevSymbolType === 'operator' && lastSymbolType === 'operator') {
+      e.preventDefault();
+    }
+    // не вводить 2 одинаковых оператора подряд
+    if (e.key === lastSymbol) {
+      e.preventDefault();
+      return;
+    }
+    // <--- ------------ ---
   }
 
   if (e.key === '=') {
@@ -102,7 +160,28 @@ function onCalculateBtnClick(e) {
   IS_CALCULATED = true;
 }
 
+function onInputChange(e) {
+  if (e.target.id === 'input_field') {
+    clearInputFieldExtra();
+  }
+}
+
+// === calculation ===>
 function calculate(str) {
   const func = new Function(`return ${str}`);
   return func(str);
 }
+// <=== END calculation ====
+
+// === utils ===>
+function checkSymbolType(symbol) {
+  const numbersList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  const operatorsList = ['+', '-', '*', '/', '%'];
+
+  if (numbersList.includes(symbol)) return 'number';
+  if (operatorsList.includes(symbol)) return 'operator';
+}
+// <=== END utils====
+
+// ===  ===>
+// <=== END ====
