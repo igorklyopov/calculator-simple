@@ -58,8 +58,12 @@ function onButtonsClick(e) {
 }
 
 function showResult() {
+  const result = calculate(refs.inputField.value);
+  const isFloat = result.toString().includes('.');
+  const normalizedResult = removeLastZero(result.toFixed(8).toString());
+
   refs.inputFieldExtra.innerText = refs.inputField.value + '=';
-  refs.inputField.value = calculate(refs.inputField.value);
+  refs.inputField.value = isFloat ? normalizedResult : result;
 }
 
 function clearInputField() {
@@ -181,7 +185,16 @@ function checkSymbolType(symbol) {
   if (numbersList.includes(symbol)) return 'number';
   if (operatorsList.includes(symbol)) return 'operator';
 }
+
+function removeLastZero(str) {
+  if (str[str.length - 1] !== '0') {
+    return str;
+  } else {
+    return removeLastZero(str.slice(0, str.length - 1));
+  }
+}
 // <=== END utils====
 
 // ===  ===>
 // <=== END ====
+/////////////

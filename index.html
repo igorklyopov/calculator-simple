@@ -17,11 +17,24 @@
           <span class="extra_input_field" id="extra_input_field"></span>
           <form id="calculator_form">
             <label class="input_wrap">
-              <input type="text" 
-               autocomplete="off" class="input_field" id="input_field" />
+              <input
+                type="text"
+                autocomplete="off"
+                maxlength="15"
+                class="input_field"
+                id="input_field"
+              />
             </label>
 
             <ul class="numbers">
+              <li class="item">
+                <input
+                  type="button"
+                  value="0"
+                  class="button"
+                  data-type="number"
+                />
+              </li>
               <li class="item">
                 <input
                   type="button"
