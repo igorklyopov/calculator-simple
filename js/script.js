@@ -13,6 +13,7 @@ refs.calculatorForm.addEventListener('keydown', onKeydown);
 refs.calculatorForm.addEventListener('input', onInputChange);
 
 let IS_CALCULATED = false;
+let numberSymbolCount = 0;
 
 function onButtonsClick(e) {
   const buttonTypes = ['button', 'submit', 'reset'];
@@ -86,6 +87,7 @@ function onKeydown(e) {
 
   if (isOperatorKey) {
     IS_CALCULATED = false;
+    numberSymbolCount = 0;
 
     const inputValue = refs.inputField.value;
     const lastSymbol = inputValue[inputValue.length - 1];
@@ -145,6 +147,23 @@ function onKeydown(e) {
     // <--- ------------ ---
   }
 
+  // --- max length of number - 15 symbols --->
+  if (isNumberKey) {
+    numberSymbolCount += 1;
+  }
+
+  if (isNumberKey && numberSymbolCount > 15) {
+    numberSymbolCount = 15;
+    e.preventDefault();
+    refs.inputFieldExtra.innerText = 'max length of number - 15 symbols';
+    return;
+  }
+
+  if ((e.key === 'Backspace' || e.key === 'Delete') && numberSymbolCount > 0) {
+    numberSymbolCount -= 1;
+  }
+  //<--- ------ ---
+
   if (e.key === '=') {
     onCalculateBtnClick(e);
   }
@@ -193,6 +212,7 @@ function removeLastZero(str) {
     return removeLastZero(str.slice(0, str.length - 1));
   }
 }
+
 // <=== END utils====
 
 // ===  ===>
