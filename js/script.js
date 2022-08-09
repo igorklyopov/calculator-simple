@@ -34,9 +34,11 @@ function onButtonsClick(e) {
       break;
 
     case 'util':
+      onUtilBtnClick(e);
       break;
 
     case 'operator':
+      if (refs.inputField.value === '') return;
       IS_CALCULATED = false;
       input(e.target.value);
       break;
@@ -189,6 +191,32 @@ function onInputChange(e) {
   }
 }
 
+function onUtilBtnClick(e) {
+  if (e.target.value === '+/-') {
+    const cursorPosition = refs.inputField.selectionStart;
+    const parsedInputValue = getParsedInputValue(refs.inputField.value);
+    const valueWithCursor = getValueWithCursor(
+      parsedInputValue,
+      cursorPosition,
+    );
+
+    let newInputValue = '';
+
+    const newItem = valueWithCursor.text.includes('-')
+      ? valueWithCursor.text.replace('-', '')
+      : `-${valueWithCursor.text}`;
+
+    for (const item of parsedInputValue) {
+      newInputValue =
+        item.text === valueWithCursor.text
+          ? (newInputValue += newItem)
+          : (newInputValue += item.text);
+    }
+
+    refs.inputField.value = newInputValue;
+  }
+}
+
 // === calculation ===>
 function calculate(str) {
   const func = new Function(`return ${str}`);
@@ -213,8 +241,49 @@ function removeLastZero(str) {
   }
 }
 
+function getValueWithCursor(valuesArr, cursorPosition) {
+  const currentCursorPosition =
+    cursorPosition > 0 ? cursorPosition - 1 : cursorPosition;
+
+  for (const item of valuesArr) {
+    if (item.indexes.includes(currentCursorPosition)) {
+      return item;
+    }
+  }
+}
+
+function getParsedInputValue(value) {
+  const symbols = value.split('');
+
+  const result = [];
+  let item = { text: '', indexes: [] };
+
+  for (let i = 0; i <= symbols.length; i += 1) {
+    const symbol = symbols[i];
+
+    if (checkSymbolType(symbol) === 'number' || item.text === '') {
+      item.text += symbol;
+      item.indexes.push(i);
+    } else {
+      result.push({ ...item });
+
+      if (symbol) {
+        item.text = symbol;
+        item.indexes = [];
+        item.indexes.push(i);
+
+        result.push({ ...item });
+
+        item.text = '';
+        item.indexes = [];
+      }
+    }
+  }
+
+  return result;
+}
 // <=== END utils====
 
 // ===  ===>
 // <=== END ====
-/////////////
+
