@@ -34,6 +34,7 @@ function onButtonsClick(e) {
       break;
 
     case 'util':
+      if (refs.inputField.value === '') return;
       onUtilBtnClick(e);
       break;
 
@@ -202,6 +203,11 @@ function onUtilBtnClick(e) {
 
     let newInputValue = '';
 
+    // do not add "-" to operator symbol
+    if (checkSymbolType(valueWithCursor.text) === 'operator') {
+      return;
+    }
+
     const newItem = valueWithCursor.text.includes('-')
       ? valueWithCursor.text.replace('-', '')
       : `-${valueWithCursor.text}`;
@@ -286,4 +292,3 @@ function getParsedInputValue(value) {
 
 // ===  ===>
 // <=== END ====
-
