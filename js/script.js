@@ -12,6 +12,7 @@ refs.calculatorForm.addEventListener('click', onButtonsClick);
 refs.calculatorForm.addEventListener('keydown', onKeydown);
 refs.calculatorForm.addEventListener('input', onInputChange);
 
+let EXPRESSION_FOR_CALCULATION = '';
 let IS_CALCULATED = false;
 let numberSymbolCount = 0;
 
@@ -42,6 +43,7 @@ function onButtonsClick(e) {
       if (refs.inputField.value === '') return;
       IS_CALCULATED = false;
       input(e.target.value);
+      onOperatorClick(e);
       break;
 
     case 'reset':
@@ -61,8 +63,7 @@ function onButtonsClick(e) {
   }
 }
 
-function showResult() {
-  const result = calculate(refs.inputField.value);
+function showResult(result) {
   const isFloat = result.toString().includes('.');
   const normalizedResult = removeLastZero(result.toFixed(8).toString());
 
@@ -182,7 +183,21 @@ function onCalculateBtnClick(e) {
   const inputFieldIsEmpty = refs.inputField.value === '';
 
   if (inputFieldIsEmpty || IS_CALCULATED) return;
-  showResult();
+
+  const specialOperatorsList = ['%'];
+  const specialOperatorsRegExp = new RegExp(
+    `[${specialOperatorsList.join()}]`,
+    'g',
+  );
+
+  const isSimpleExpression = !specialOperatorsRegExp.test(
+    refs.inputField.value,
+  );
+  const result = isSimpleExpression
+    ? calculate(refs.inputField.value)
+    : calculate(EXPRESSION_FOR_CALCULATION);
+
+  showResult(result);
   IS_CALCULATED = true;
 }
 
@@ -194,8 +209,8 @@ function onInputChange(e) {
 
 function onUtilBtnClick(e) {
   if (e.target.value === '+/-') {
-    const cursorPosition = refs.inputField.selectionStart;
     const parsedInputValue = getParsedInputValue(refs.inputField.value);
+    const cursorPosition = refs.inputField.selectionStart;
     const valueWithCursor = getValueWithCursor(
       parsedInputValue,
       cursorPosition,
@@ -220,6 +235,48 @@ function onUtilBtnClick(e) {
     }
 
     refs.inputField.value = newInputValue;
+  }
+}
+
+function onOperatorClick(e) {
+  const parsedInputValue = getParsedInputValue(refs.inputField.value);
+
+  if (e.target.value === '%') {
+    let firstOperand = null;
+    let secondOperand = null;
+    let operator = null;
+    let continueIteration = true;
+
+    for (let i = parsedInputValue.length - 1; continueIteration; i -= 1) {
+      const item = parsedInputValue[i];
+      const isNumberItem = !isNaN(parseInt(item?.text));
+      const isOperatorItem = checkSymbolType(item?.text) === 'operator';
+
+      if (!secondOperand && isNumberItem) {
+        secondOperand = parseInt(item.text) / 100;
+        continue;
+      }
+
+      if (isOperatorItem && item.text !== '%') {
+        operator = item.text;
+        continue;
+      }
+
+      if (!firstOperand && isNumberItem) {
+        firstOperand = parseInt(item.text);
+
+        continueIteration = false;
+        continue;
+      }
+
+      if (i <= 0) {
+        continueIteration = false;
+      }
+    }
+
+    EXPRESSION_FOR_CALCULATION = firstOperand
+      ? `${firstOperand}${operator}${firstOperand * secondOperand}`
+      : secondOperand;
   }
 }
 
@@ -289,6 +346,3 @@ function getParsedInputValue(value) {
   return result;
 }
 // <=== END utils====
-
-// ===  ===>
-// <=== END ====
