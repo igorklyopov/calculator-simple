@@ -2,10 +2,10 @@ const refs = {
   calculatorForm: document.getElementById('calculator_form'),
   inputField: document.getElementById('input_field'),
   inputFieldExtra: document.getElementById('extra_input_field'),
-  numbers: document.querySelectorAll('[data-type="number"]'),
-  utils: document.querySelectorAll('[data-type="util"]'),
-  operators: document.querySelectorAll('[data-type="operator"]'),
-  managers: document.querySelectorAll('[data-type="manager"]'),
+  // numbers: document.querySelectorAll('[data-type="number"]'),
+  // utils: document.querySelectorAll('[data-type="util"]'),
+  // operators: document.querySelectorAll('[data-type="operator"]'),
+  // managers: document.querySelectorAll('[data-type="manager"]'),
 };
 
 refs.calculatorForm.addEventListener('click', onButtonsClick);
@@ -61,22 +61,6 @@ function onButtonsClick(e) {
   function input(value) {
     refs.inputField.value += value;
   }
-}
-
-function showResult(result) {
-  const isFloat = result.toString().includes('.');
-  const normalizedResult = removeLastZero(result.toFixed(8).toString());
-
-  refs.inputFieldExtra.innerText = refs.inputField.value + '=';
-  refs.inputField.value = isFloat ? normalizedResult : result;
-}
-
-function clearInputField() {
-  refs.inputField.value = '';
-}
-
-function clearInputFieldExtra() {
-  refs.inputFieldExtra.innerText = '';
 }
 
 function onKeydown(e) {
@@ -210,34 +194,46 @@ function onInputChange(e) {
 }
 
 function onUtilBtnClick(e) {
-  if (e.target.value === '+/-') {
-    const parsedInputValue = getParsedInputValue(refs.inputField.value);
-    const cursorPosition = refs.inputField.selectionStart;
-    const valueWithCursor = getValueWithCursor(
-      parsedInputValue,
-      cursorPosition,
-    );
+  const cursorPosition = refs.inputField.selectionStart;
 
-    let newInputValue = '';
+  let newInputValue = '';
 
-    // do not add "-" to operator symbol
-    if (checkSymbolType(valueWithCursor.text) === 'operator') {
-      return;
-    }
+  switch (e.target.value) {
+    case '+/-':
+      const parsedInputValue = getParsedInputValue(refs.inputField.value);
+      const valueWithCursor = getValueWithCursor(
+        parsedInputValue,
+        cursorPosition,
+      );
 
-    const newItem = valueWithCursor.text.includes('-')
-      ? valueWithCursor.text.replace('-', '')
-      : `-${valueWithCursor.text}`;
+      // do not add "-" to operator symbol
+      if (checkSymbolType(valueWithCursor.text) === 'operator') {
+        return;
+      }
 
-    for (const item of parsedInputValue) {
-      newInputValue =
-        item.text === valueWithCursor.text
-          ? (newInputValue += newItem)
-          : (newInputValue += item.text);
-    }
+      const newItem = valueWithCursor.text.includes('-')
+        ? valueWithCursor.text.replace('-', '')
+        : `-${valueWithCursor.text}`;
 
-    refs.inputField.value = newInputValue;
+      for (const item of parsedInputValue) {
+        newInputValue =
+          item.text === valueWithCursor.text
+            ? (newInputValue += newItem)
+            : (newInputValue += item.text);
+      }
+      break;
+
+    case 'del':
+      const inputValueItemsList = refs.inputField.value.slice().split('');
+      inputValueItemsList.splice(cursorPosition - 1, 1);
+      newInputValue = inputValueItemsList.join('');
+      break;
+
+    default:
+      break;
   }
+
+  refs.inputField.value = newInputValue;
 }
 
 function onOperatorClick(e) {
@@ -280,6 +276,22 @@ function onOperatorClick(e) {
       ? `${firstOperand}${operator}${firstOperand * secondOperand}`
       : secondOperand;
   }
+}
+
+function showResult(result) {
+  const isFloat = result.toString().includes('.');
+  const normalizedResult = removeLastZero(result.toFixed(8).toString());
+
+  refs.inputFieldExtra.innerText = refs.inputField.value + '=';
+  refs.inputField.value = isFloat ? normalizedResult : result;
+}
+
+function clearInputField() {
+  refs.inputField.value = '';
+}
+
+function clearInputFieldExtra() {
+  refs.inputFieldExtra.innerText = '';
 }
 
 // === calculation ===>
