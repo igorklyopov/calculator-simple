@@ -202,6 +202,8 @@ function onCalculateBtnClick(e) {
 }
 
 function onInputChange(e) {
+  IS_CALCULATED = false;
+
   if (e.target.id === 'input_field') {
     clearInputFieldExtra();
   }
@@ -282,8 +284,13 @@ function onOperatorClick(e) {
 
 // === calculation ===>
 function calculate(str) {
-  const func = new Function(`return ${str}`);
-  return func(str);
+  try {
+    const func = new Function(`return ${str}`);
+    return func(str);
+  } catch (error) {
+    if (error) refs.inputFieldExtra.innerText = 'Error';
+    IS_CALCULATED = true;
+  }
 }
 // <=== END calculation ====
 
