@@ -274,7 +274,7 @@ function onOperatorClick(e) {
       const isOperatorItem = checkSymbolType(item?.text) === 'operator';
 
       if (!secondOperand && isNumberItem) {
-        secondOperand = parseInt(item.text) / 100;
+        secondOperand = Number(item.text) / 100;
         continue;
       }
 
