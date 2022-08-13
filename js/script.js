@@ -21,6 +21,7 @@ function onButtonsClick(e) {
   const isButtonType = buttonTypes.includes(e.target.type);
   const cursorPosition = refs.inputField.selectionStart;
   const parsedInputValue = getParsedInputValue(refs.inputField.value);
+  const buttonValue = e.target.value;
 
   if (!isButtonType) {
     return;
@@ -35,24 +36,24 @@ function onButtonsClick(e) {
       }
 
       if (
-        e.target.value === '0' &&
+        buttonValue === '0' &&
         refs.inputField.value[cursorPosition - 1] === '0'
       ) {
         return;
       }
 
-      input(e.target.value);
+      input(buttonValue);
       break;
 
     case 'util':
       if (refs.inputField.value === '') return;
-      onUtilBtnClick(e, cursorPosition, parsedInputValue);
+      onUtilBtnClick(buttonValue, cursorPosition, parsedInputValue);
       break;
 
     case 'operator':
       if (refs.inputField.value === '') return;
       IS_CALCULATED = false;
-      onOperatorClick(e, cursorPosition, parsedInputValue);
+      onOperatorClick(buttonValue, cursorPosition, parsedInputValue);
       break;
 
     case 'reset':
@@ -198,12 +199,12 @@ function onInputChange(e) {
   }
 }
 
-function onUtilBtnClick(e, cursorPosition, parsedInputValue) {
+function onUtilBtnClick(buttonValue, cursorPosition, parsedInputValue) {
   const valueWithCursor = getValueWithCursor(parsedInputValue, cursorPosition);
 
   let newInputValue = '';
 
-  switch (e.target.value) {
+  switch (buttonValue) {
     case '+/-':
       // do not add "-" to operator symbol
       if (checkSymbolType(valueWithCursor.text) === 'operator') {
@@ -262,14 +263,14 @@ function onUtilBtnClick(e, cursorPosition, parsedInputValue) {
   refs.inputField.value = newInputValue;
 }
 
-function onOperatorClick(e, cursorPosition, parsedInputValue) {
+function onOperatorClick(buttonValue, cursorPosition, parsedInputValue) {
   const prevItem = refs.inputField.value[cursorPosition - 1];
 
-  if (prevItem === e.target.value || checkSymbolType(prevItem) === 'operator') {
+  if (prevItem === buttonValue || checkSymbolType(prevItem) === 'operator') {
     return;
   }
 
-  if (e.target.value === '%') {
+  if (buttonValue === '%') {
     let firstOperand = null;
     let secondOperand = null;
     let operator = null;
@@ -307,7 +308,7 @@ function onOperatorClick(e, cursorPosition, parsedInputValue) {
       : secondOperand;
   }
 
-  input(e.target.value);
+  input(buttonValue);
 }
 
 function showResult(result) {
