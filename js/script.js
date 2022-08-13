@@ -33,6 +33,14 @@ function onButtonsClick(e) {
         clearInputFieldExtra();
         IS_CALCULATED = false;
       }
+
+      if (
+        e.target.value === '0' &&
+        refs.inputField.value[cursorPosition - 1] === '0'
+      ) {
+        return;
+      }
+
       input(e.target.value);
       break;
 
