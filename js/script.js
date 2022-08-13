@@ -195,17 +195,13 @@ function onInputChange(e) {
 
 function onUtilBtnClick(e) {
   const cursorPosition = refs.inputField.selectionStart;
+  const parsedInputValue = getParsedInputValue(refs.inputField.value);
+  const valueWithCursor = getValueWithCursor(parsedInputValue, cursorPosition);
 
   let newInputValue = '';
 
   switch (e.target.value) {
     case '+/-':
-      const parsedInputValue = getParsedInputValue(refs.inputField.value);
-      const valueWithCursor = getValueWithCursor(
-        parsedInputValue,
-        cursorPosition,
-      );
-
       // do not add "-" to operator symbol
       if (checkSymbolType(valueWithCursor.text) === 'operator') {
         return;
@@ -227,6 +223,33 @@ function onUtilBtnClick(e) {
       const inputValueItemsList = refs.inputField.value.slice().split('');
       inputValueItemsList.splice(cursorPosition - 1, 1);
       newInputValue = inputValueItemsList.join('');
+      break;
+
+    case ',':
+      const isFloatNumber = /[,.]/.test(valueWithCursor.text);
+
+      if (
+        isFloatNumber ||
+        checkSymbolType(valueWithCursor.text) === 'operator'
+      ) {
+        return;
+      }
+
+      for (let i = 0; i < parsedInputValue.length; i += 1) {
+        const item = parsedInputValue[i];
+
+        if (item.indexes[0] === valueWithCursor.indexes[0]) {
+          const numberSymbols = valueWithCursor.text.split('');
+
+          numberSymbols.splice(cursorPosition, 0, '.');
+
+          const newFloatNumber = numberSymbols.join('');
+
+          newInputValue += newFloatNumber;
+        } else {
+          newInputValue += item.text;
+        }
+      }
       break;
 
     default:
@@ -343,7 +366,11 @@ function getParsedInputValue(value) {
   for (let i = 0; i <= symbols.length; i += 1) {
     const symbol = symbols[i];
 
-    if (checkSymbolType(symbol) === 'number' || item.text === '') {
+    if (
+      checkSymbolType(symbol) === 'number' ||
+      symbol === '.' ||
+      item.text === ''
+    ) {
       item.text += symbol;
       item.indexes.push(i);
     } else {
