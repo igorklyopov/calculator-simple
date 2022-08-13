@@ -284,7 +284,7 @@ function onOperatorClick(e) {
       }
 
       if (!firstOperand && isNumberItem) {
-        firstOperand = parseInt(item.text);
+        firstOperand = Number(item.text);
 
         continueIteration = false;
         continue;
