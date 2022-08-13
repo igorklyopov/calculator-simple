@@ -19,6 +19,8 @@ let numberSymbolCount = 0;
 function onButtonsClick(e) {
   const buttonTypes = ['button', 'submit', 'reset'];
   const isButtonType = buttonTypes.includes(e.target.type);
+  const cursorPosition = refs.inputField.selectionStart;
+  const parsedInputValue = getParsedInputValue(refs.inputField.value);
 
   if (!isButtonType) {
     return;
@@ -36,14 +38,13 @@ function onButtonsClick(e) {
 
     case 'util':
       if (refs.inputField.value === '') return;
-      onUtilBtnClick(e);
+      onUtilBtnClick(e, cursorPosition, parsedInputValue);
       break;
 
     case 'operator':
       if (refs.inputField.value === '') return;
       IS_CALCULATED = false;
-      input(e.target.value);
-      onOperatorClick(e);
+      onOperatorClick(e, cursorPosition, parsedInputValue);
       break;
 
     case 'reset':
@@ -56,10 +57,6 @@ function onButtonsClick(e) {
 
     default:
       break;
-  }
-
-  function input(value) {
-    refs.inputField.value += value;
   }
 }
 
@@ -193,9 +190,7 @@ function onInputChange(e) {
   }
 }
 
-function onUtilBtnClick(e) {
-  const cursorPosition = refs.inputField.selectionStart;
-  const parsedInputValue = getParsedInputValue(refs.inputField.value);
+function onUtilBtnClick(e, cursorPosition, parsedInputValue) {
   const valueWithCursor = getValueWithCursor(parsedInputValue, cursorPosition);
 
   let newInputValue = '';
@@ -259,8 +254,12 @@ function onUtilBtnClick(e) {
   refs.inputField.value = newInputValue;
 }
 
-function onOperatorClick(e) {
-  const parsedInputValue = getParsedInputValue(refs.inputField.value);
+function onOperatorClick(e, cursorPosition, parsedInputValue) {
+  const prevItem = refs.inputField.value[cursorPosition - 1];
+
+  if (prevItem === e.target.value || checkSymbolType(prevItem) === 'operator') {
+    return;
+  }
 
   if (e.target.value === '%') {
     let firstOperand = null;
@@ -299,6 +298,8 @@ function onOperatorClick(e) {
       ? `${firstOperand}${operator}${firstOperand * secondOperand}`
       : secondOperand;
   }
+
+  input(e.target.value);
 }
 
 function showResult(result) {
@@ -330,6 +331,10 @@ function calculate(str) {
 // <=== END calculation ====
 
 // === utils ===>
+function input(value) {
+  refs.inputField.value += value;
+}
+
 function checkSymbolType(symbol) {
   const numbersList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
   const operatorsList = ['+', '-', '*', '/', '%'];
