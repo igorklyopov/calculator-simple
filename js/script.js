@@ -35,11 +35,33 @@ function onButtonsClick(e) {
         IS_CALCULATED = false;
       }
 
-      if (
-        buttonValue === '0' &&
-        refs.inputField.value[cursorPosition - 1] === '0'
-      ) {
-        return;
+      if (buttonValue === '0') {
+        for (const item of parsedInputValue) {
+          const itemSymbols = item.text.split('');
+
+          if (itemSymbols.every(symbol => symbol === '0')) {
+            return;
+          }
+        }
+      }
+
+      if (refs.inputField.value.includes('0')) {
+        let newInputValue = '';
+        let isCorrectValue = true;
+
+        for (let i = 0; i < parsedInputValue.length; i += 1) {
+          const item = parsedInputValue[i];
+          const itemSymbols = item.text.split('');
+
+          if (itemSymbols[0] === '0' && itemSymbols[1] !== '.') {
+            itemSymbols.splice(0, 1);
+            item.text = itemSymbols.join('');
+            isCorrectValue = false;
+          }
+          newInputValue += item.text;
+        }
+
+        if (!isCorrectValue) refs.inputField.value = newInputValue;
       }
 
       input(buttonValue);
@@ -183,6 +205,7 @@ function onCalculateBtnClick(e) {
   const isSimpleExpression = !specialOperatorsRegExp.test(
     refs.inputField.value,
   );
+
   const result = isSimpleExpression
     ? calculate(refs.inputField.value)
     : calculate(EXPRESSION_FOR_CALCULATION);
