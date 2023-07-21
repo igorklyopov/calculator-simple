@@ -2,10 +2,6 @@ const refs = {
   calculatorForm: document.getElementById('calculator_form'),
   inputField: document.getElementById('input_field'),
   inputFieldExtra: document.getElementById('extra_input_field'),
-  // numbers: document.querySelectorAll('[data-type="number"]'),
-  // utils: document.querySelectorAll('[data-type="util"]'),
-  // operators: document.querySelectorAll('[data-type="operator"]'),
-  // managers: document.querySelectorAll('[data-type="manager"]'),
 };
 
 refs.calculatorForm.addEventListener('click', onButtonsClick);
